@@ -1,6 +1,6 @@
-# teamr-vue
+# FIFA group creator
 
-> Create FIFA tournament groups with ease - powered by vue.js and node.js
+> Create FIFA tournament groups - powered by vue.js and node.js
 
 ## Build Setup
 
