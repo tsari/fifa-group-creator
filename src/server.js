@@ -2,70 +2,12 @@ var express = require('express');
 var fs = require('fs');
 var request = require('request');
 var bodyParser = require('body-parser');
-var cheerio = require('cheerio');
+var TeamParser = require('./models/TeamParser');
 var cache = require('memory-cache');
 var hash = require('object-hash');
 var app = express();
 
 var teams;
-
-/**
- Parse team data from html source.
- @param
- */
-function parseTeams($) {
-    $('#no-more-tables table.teams tbody').children('tr').each(function () {
-        let team = {};
-
-        // we have eight attributes per team, so a row with team info must have this length as well
-        if ($(this).children('td').length == 8 && $(this).children('td').first().children().first().attr('title') != 'None') {
-            $(this).children('td').each(function () {
-                let data = $(this);
-                switch (data.attr('data-title')) {
-                    case 'Name':
-                        team.name = data.children().first().text();
-                        break;
-                    case 'League':
-                        team.league = data.children().first().text();
-                        break;
-                    case 'ATT':
-                        team.attack = data.children().first().text();
-                        break;
-                    case 'MID':
-                        team.midfield = data.children().first().text();
-                        break;
-                    case 'DEF':
-                        team.defense = data.children().first().text();
-                        break;
-                    case 'OVR':
-                        team.overall = data.children().first().text();
-                        break;
-                    case 'Team Rating':
-                        team.stars = data.find('span.star').children('i.fa-star').length;
-                        team.stars += (data.find('span.star').children('i.fa-star-half-o').length * 0.5);
-                        break;
-                }
-            });
-
-            teams.push(team);
-        }
-    });
-
-    return teams;
-}
-
-/**
- * Check if more pages with teams are present
- *
- * @param $ Cheerio object
- */
-function more($) {
-    if ($('li[class=\'next\']').length == 1) {
-        return true;
-    }
-
-    return false;
-}
 
 function getUrl(stars, overallMin, overallMax, teamType, page) {
     let url = `https://www.fifaindex.com/teams/${page}/?`;
@@ -143,20 +85,19 @@ function draw(req, res) {
 }
 
 
-function scrape(req, res, page = 1) {
+function scrape(req, res, parser, page = 1) {
     let url = getUrl(req.body.stars, req.body.overallMin, req.body.overallMax, req.body.teamType, page);
     request(url, handleResponse);
 
     function handleResponse(error, response, html) {
         switch (response.statusCode) {
             case 200:
-                html = cheerio.load(html);
-                parseTeams(html);
+                teams = teams.concat(teams, parser.parse(html));
 
                 // check if more pages with teams are present and continue parsing data, or
-                if (more(html)) {
+                if (parser.more(html)) {
                     page++;
-                    scrape(req, res, page);
+                    scrape(req, res, parser, page);
                 } else {
                     draw(req, res);
                 }
@@ -180,7 +121,9 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json()); // for parsing application/json
 app.post('/scrape', function (req, res) {
     teams = [];
-    scrape(req, res);
+    let parser = new TeamParser();
+
+    scrape(req, res, parser);
 });
 
 app.listen('8081');

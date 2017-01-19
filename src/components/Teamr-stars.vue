@@ -17,7 +17,7 @@
                         icons.push('fa fa-star-half-o');
                     }
                 }
-                console.log(icons)
+
                 return icons;
             }
         }
