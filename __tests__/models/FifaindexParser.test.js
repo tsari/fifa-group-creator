@@ -1,9 +1,9 @@
 describe('Test parsing methods for html source code', () => {
-    const TeamParser = require('../../src/models/TeamParser');
+    const FifaindexParser = require('../../src/models/FifaindexParser');
     let parser;
 
     beforeEach(() => {
-        parser = new TeamParser();
+        parser = new FifaindexParser();
     });
 
     it('parses a css class "next" from source code and returns a boolean', () => {
@@ -13,7 +13,7 @@ describe('Test parsing methods for html source code', () => {
 
     it('parses teams from html source code into an array of team objects', () => {
         const fs = require('fs');
-        fs.readFile(`${__dirname}/TeamParser.fixture.html`, (err, html) => {
+        fs.readFile(`${__dirname}/FifaindexParser.fixture.html`, (err, html) => {
             if (err) {
                 return console.log(err);
             }

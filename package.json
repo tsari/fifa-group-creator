@@ -17,7 +17,7 @@
     "express": "latest",
     "memory-cache": "^0.1.6",
     "object-hash": "^1.1.5",
-    "request": "latest",
+    "request-promise": "latest",
     "vue": "^2.1.0",
     "vue-resource": "^1.0.3"
   },

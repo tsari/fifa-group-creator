@@ -1,6 +1,6 @@
 var cheerio = require('cheerio');
 
-class TeamParser {
+class FifaindexParser {
 
     /**
      Parse team data from html source.
@@ -60,7 +60,32 @@ class TeamParser {
         let $ = cheerio.load(html);
         return $('li[class=\'next\']').length === 1;
     }
-}
-;
 
-module.exports = TeamParser;
+    /**
+     * Create the url to where the content to parse comes from.
+     *
+     * @param stars
+     * @param overallMin
+     * @param overallMax
+     * @param teamType
+     * @param page
+     * @return {string}
+     */
+    getUrl(stars, overallMin, overallMax, teamType, page) {
+        let url = `https://www.fifaindex.com/teams/${page}/?`;
+
+        if (overallMin > 0 && overallMax < 100 && overallMin < overallMax) {
+            url += `attackrating_0=${overallMin}&attackrating_1=${overallMax}&`;
+            url += `midfieldrating_0=${overallMin}&midfieldrating_1=${overallMax}&`;
+            url += `defenserating_0=${overallMin}&defenserating_1=${overallMax}&`;
+            url += `overallrating_0=${overallMin}&overallrating_1=${overallMax}&`;
+        }
+
+        url += `stars=${stars}&`;
+        url += `type=${teamType}`;
+
+        return url;
+    }
+}
+
+module.exports = FifaindexParser;
