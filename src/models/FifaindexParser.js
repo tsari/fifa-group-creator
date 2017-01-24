@@ -3,14 +3,22 @@ var cheerio = require('cheerio');
 class FifaindexParser {
 
     /**
-     Parse team data from html source.
-
-     @param html string HTML code
-     @return Array of team objects
+     * Parse team data from html source.
+     *
+     * @param html string HTML code
+     * @return {Array} of team objects
+     *
+     * @throws TypeError if param isn't a string
      */
     parse(html) {
+
+        if (typeof html !== 'string') {
+            throw new TypeError('Passed parameter must be type of string!');
+        }
+
         let $ = cheerio.load(html);
         let teams = [];
+
         $('#no-more-tables table.teams tbody').children('tr').each(function () {
             let team = {};
 
@@ -20,7 +28,7 @@ class FifaindexParser {
                     let data = $(this);
                     switch (data.attr('data-title')) {
                         case 'Name':
-                            team.name = data.children().first().text();
+                            team.team = data.children().first().text();
                             break;
                         case 'League':
                             team.league = data.children().first().text();
@@ -57,6 +65,10 @@ class FifaindexParser {
      * @param html string Cheerio object
      */
     more(html) {
+        if (typeof html !== 'string') {
+            return false;
+        }
+
         let $ = cheerio.load(html);
         return $('li[class=\'next\']').length === 1;
     }
@@ -71,7 +83,7 @@ class FifaindexParser {
      * @param page
      * @return {string}
      */
-    getUrl(stars, overallMin, overallMax, teamType, page) {
+    getUrl(stars, overallMin, overallMax, teamType = 0, page = 1) {
         let url = `https://www.fifaindex.com/teams/${page}/?`;
 
         if (overallMin > 0 && overallMax < 100 && overallMin < overallMax) {
@@ -81,8 +93,15 @@ class FifaindexParser {
             url += `overallrating_0=${overallMin}&overallrating_1=${overallMax}&`;
         }
 
-        url += `stars=${stars}&`;
-        url += `type=${teamType}`;
+        if (stars && stars > 0) {
+            url += `stars=${stars}&`;
+        }
+
+        // types are available from 0 to 2
+        let teamTypes = [0, 1, 2];
+        if (teamTypes.indexOf(teamType) !== -1) {
+            url += `type=${teamType}`;
+        }
 
         return url;
     }

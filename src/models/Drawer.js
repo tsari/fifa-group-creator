@@ -6,19 +6,20 @@ class Drawer{
     /**
      * Draw competitors, teams, groups and bring it all together.
      *
-     * @param teams
+     * @param teamsList
      * @param competitorsList
      * @param groupCount
      * @return {{}}
      */
-    draw(teams, competitorsList, groupCount) {
+    draw(teamsList, competitorsList, groupCount = 2) {
 
         // check if count team greater than competitorsList
-        if (teams.length < competitorsList.length) {
-            throw new Error(`Found only ${teams.length} teams for ${competitorsList.length} competitors. Please adjust your criteria.`, 422);
+        if (teamsList.length < competitorsList.length) {
+            throw new Error(`Found only ${teamsList.length} teams for ${competitorsList.length} competitors. Please adjust your criteria.`);
         } else {
 
             let competitors = competitorsList.slice();
+            let teams = teamsList.slice();
             let groups = {};
             let groupNames = [];
             let maxPerGroup = Math.ceil(competitorsList.length / groupCount);
@@ -47,7 +48,7 @@ class Drawer{
 
                 // add competitor and the team to the final result
                 groups[group][competitor] = {
-                    team: team[0].name,
+                    team: team[0].team,
                     league: team[0].league,
                     attack: team[0].attack,
                     midfield: team[0].midfield,
