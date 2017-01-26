@@ -2,7 +2,7 @@
     <table class="table is-striped capitalize">
         <thead>
         <tr>
-            <th colspan="8">Group {{name}}</th>
+            <th colspan="9">Group {{name}}</th>
         </tr>
         <tr>
             <th>Competitor</th>
@@ -12,7 +12,7 @@
             <th>Midfield</th>
             <th>defense</th>
             <th>Overall</th>
-            <th>Stars</th>
+            <th colspan="2">Stars</th>
         </tr>
         </thead>
         <tbody>
@@ -25,6 +25,7 @@
             <td>{{team.defense}}</td>
             <td>{{team.overall}}</td>
             <td><teamr-stars :stars="team.stars"></teamr-stars></td>
+            <td><span class="icon is-small pointer" @click="reDraw(competitor)"><li class="fa fa-repeat"></li></span></td>
         </tr>
         </tbody>
     </table>
@@ -33,10 +34,27 @@
     import teamrStars from './Teamr-stars.vue'
     export default {
         props: ['data', 'name'],
+        data(){
+            return {
+                payload: {}
+            }
+        },
         components: {teamrStars},
-        methods: {}
+        methods: {
+            reDraw(competitor){
+                this.payload = JSON.parse(localStorage.getItem('payload'));
+
+                this.$http.post('http://localhost:8081/reDraw', this.payload).then(response => {
+                    this.data[competitor] = response.data;
+                    this.payload['drawnTeams'].push(response.data.team);
+
+                    localStorage.setItem('payload', JSON.stringify(this.payload));
+                });
+            },
+    }
     }
 </script>
 <style type="text/css">
     .capitalize{text-transform: capitalize}
+    .pointer{cursor: pointer}
 </style>

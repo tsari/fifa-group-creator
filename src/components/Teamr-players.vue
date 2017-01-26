@@ -21,7 +21,7 @@
                     <tbody>
                         <tr v-for="(competitor, index) in competitors">
                             <td>{{ competitor }}</td>
-                            <td class="has-text-right"><span class="icon is-small" @click="removePlayer(index)"><i class="fa fa-trash"></i></span></td>
+                            <td class="has-text-right"><span class="icon is-small pointer" @click="removePlayer(index)"><i class="fa fa-trash"></i></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -94,3 +94,6 @@
         }
     }
 </script>
+<style type="text/css">
+    .pointer{cursor: pointer}
+</style>

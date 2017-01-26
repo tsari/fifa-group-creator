@@ -10,7 +10,6 @@
             drawnStars(){
                 let icons = [];
                 for (let i = this.stars; i > 0; i--) {
-                    console.log(i)
                     if (i >= 1) {
                         icons.push('fa fa-star');
                     } else {

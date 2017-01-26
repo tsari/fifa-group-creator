@@ -36,11 +36,19 @@
             draw(){
                 this.drawn = false;
 
-                this.$http.post('http://localhost:8081/scrape', this.payload).then((response) => {
+                this.$http.post('http://localhost:8081/scrape', this.payload).then(response => {
                     this.results = response.data;
+                    this.payload['drawnTeams'] = [];
+                    for (let group in response.data){
+                        for (let item in response.data[group]){
+                            this.payload['drawnTeams'].push(response.data[group][item].team);
+                        }
+                    }
+
+                    localStorage.setItem('payload', JSON.stringify(this.payload));
                     this.drawn = true;
                 },
-                (error) => {
+                error => {
                     console.log(error);
                 });
             },
