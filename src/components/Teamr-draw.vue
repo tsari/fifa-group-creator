@@ -40,7 +40,7 @@
         },
         methods: {
             draw(){
-                this.drawn = false;
+                this.drawn = this.drawn;
 
                 this.$http.post('http://localhost:8081/scrape', this.payload)
                     .then(
