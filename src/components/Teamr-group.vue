@@ -1,5 +1,5 @@
 <template>
-    <table class="table is-striped capitalize">
+    <table class="table is-striped capitalize is-narrow">
         <thead>
         <tr>
             <th colspan="9">Group {{name}}</th>
@@ -17,17 +17,17 @@
         </thead>
         <tbody>
         <tr v-for="(team, competitor) in data">
-            <th>{{competitor}}</th>
-            <td>{{team.team}}</td>
-            <td>{{team.league}}</td>
-            <td>{{team.attack}}</td>
-            <td>{{team.midfield}}</td>
-            <td>{{team.defense}}</td>
-            <td>{{team.overall}}</td>
-            <td>
+            <th class="competitor">{{competitor}}</th>
+            <td class="team">{{team.team}}</td>
+            <td class="league">{{team.league}}</td>
+            <td class="rating">{{team.attack}}</td>
+            <td class="rating">{{team.midfield}}</td>
+            <td class="rating">{{team.defense}}</td>
+            <td class="rating">{{team.overall}}</td>
+            <td class="stars">
                 <teamr-stars :stars="team.stars"></teamr-stars>
             </td>
-            <td><span class="icon is-small pointer" @click="reDraw(competitor)"><li class="fa fa-repeat"></li></span>
+            <td class="actions"><span class="icon is-small pointer" @click="reDraw(competitor)"><li class="fa fa-repeat"></li></span>
             </td>
         </tr>
         </tbody>
@@ -72,4 +72,12 @@
     .pointer {
         cursor: pointer
     }
+
+    table th.competitor, td.competitor {width: 10%}
+    table th.team, td.team {width: 16%}
+    table th.league, td.league {width: 16%}
+    table th.rating, td.rating {width: 1%}
+    table th.stars, td.stars {width: 13%}
+    table th.actions, td.actions {width: 1%}
+
 </style>
