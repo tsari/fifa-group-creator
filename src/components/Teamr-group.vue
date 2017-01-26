@@ -24,37 +24,52 @@
             <td>{{team.midfield}}</td>
             <td>{{team.defense}}</td>
             <td>{{team.overall}}</td>
-            <td><teamr-stars :stars="team.stars"></teamr-stars></td>
-            <td><span class="icon is-small pointer" @click="reDraw(competitor)"><li class="fa fa-repeat"></li></span></td>
+            <td>
+                <teamr-stars :stars="team.stars"></teamr-stars>
+            </td>
+            <td><span class="icon is-small pointer" @click="reDraw(competitor)"><li class="fa fa-repeat"></li></span>
+            </td>
         </tr>
         </tbody>
     </table>
 </template>
-<script>
+<script type="javascript">
     import teamrStars from './Teamr-stars.vue'
     export default {
         props: ['data', 'name'],
+        components: {teamrStars},
         data(){
             return {
                 payload: {}
             }
         },
-        components: {teamrStars},
         methods: {
             reDraw(competitor){
                 this.payload = JSON.parse(localStorage.getItem('payload'));
 
-                this.$http.post('http://localhost:8081/reDraw', this.payload).then(response => {
-                    this.data[competitor] = response.data;
-                    this.payload['drawnTeams'].push(response.data.team);
+                this.$http.post('http://localhost:8081/reDraw', this.payload)
+                    .then(
+                        response => {
+                            this.data[competitor] = response.data;
+                            this.payload['drawnTeams'].push(response.data.team);
 
-                    localStorage.setItem('payload', JSON.stringify(this.payload));
-                });
-            },
-    }
+                            localStorage.setItem('payload', JSON.stringify(this.payload));
+                            this.$root.$emit('draw');
+                        }
+                    )
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        }
     }
 </script>
 <style type="text/css">
-    .capitalize{text-transform: capitalize}
-    .pointer{cursor: pointer}
+    .capitalize {
+        text-transform: capitalize
+    }
+
+    .pointer {
+        cursor: pointer
+    }
 </style>

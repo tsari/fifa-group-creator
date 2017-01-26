@@ -38,10 +38,14 @@ exports.getTeams = function (req, res) {
     // call the promise chain
     getTeams(req, res)
         .then(teams => {
-            return drawer.draw(teams, req.body.competitors, req.body.groups);
+            let result = {};
+            result['groups'] = drawer.draw(teams, req.body.competitors, req.body.groups);
+            result['teamPoolSize'] = teams.length;
+
+            return result;
         })
-        .then(groups => {
-            return res.json(groups);
+        .then(result => {
+            return res.json(result);
         })
         .catch((error) => {
             console.log(error);

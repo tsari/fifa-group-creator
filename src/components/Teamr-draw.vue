@@ -11,7 +11,12 @@
 
             <section class="section">
                 <div class="box" v-if="drawn">
-                    <teamr-group :data="group" v-for="(group, index) in results" :name="index"></teamr-group>
+                    <teamr-stats
+                            :competitorCount="payload.competitors.length"
+                            :groupCount="payload.groups"
+                            :teamPoolSize="results.teamPoolSize"
+                    ></teamr-stats>
+                    <teamr-group :data="group" v-for="(group, index) in results.groups" :name="index"></teamr-group>
                 </div>
             </section>
 
@@ -21,9 +26,10 @@
 </template>
 <script>
     import teamrGroup from './Teamr-group.vue'
+    import teamrStats from './Teamr-stats.vue'
     export default {
         props: ['step'],
-        components: {'teamr-group': teamrGroup},
+        components: {'teamr-group': teamrGroup, 'teamr-stats': teamrStats},
         data(){
             return {
                 results: {},
@@ -36,21 +42,24 @@
             draw(){
                 this.drawn = false;
 
-                this.$http.post('http://localhost:8081/scrape', this.payload).then(response => {
-                    this.results = response.data;
-                    this.payload['drawnTeams'] = [];
-                    for (let group in response.data){
-                        for (let item in response.data[group]){
-                            this.payload['drawnTeams'].push(response.data[group][item].team);
-                        }
-                    }
+                this.$http.post('http://localhost:8081/scrape', this.payload)
+                    .then(
+                        response => {
+                            this.results = response.data;
+                            this.payload['drawnTeams'] = [];
+                            for (let group in response.data.groups) {
+                                for (let item in response.data.groups[group]) {
+                                    this.payload['drawnTeams'].push(response.data.groups[group][item].team);
+                                }
+                            }
 
-                    localStorage.setItem('payload', JSON.stringify(this.payload));
-                    this.drawn = true;
-                },
-                error => {
-                    console.log(error);
-                });
+                            localStorage.setItem('payload', JSON.stringify(this.payload));
+                            this.drawn = true;
+                        }
+                    )
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             prevStep(){
                 this.showContent = false;
