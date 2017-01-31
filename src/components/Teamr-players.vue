@@ -3,9 +3,10 @@
         <div class="subtitle has-text-centered">Competitors</div>
 
         <p class="control has-addons has-addons-centered">
-            <input :class="{'input': true, 'is-danger': errors.has('competitor') }" autofocus class="input" type="text"
+            <input :class="{'input': true, 'is-danger': errors.has('competitor')}" autofocus class="input" type="text"
                    placeholder="Name" name="competitor" v-model="competitor" @keyup.enter="addCompetitor"
-                   v-validate.initial="{rules: {required: true, alpha_num: true, not_in: competitors}}">
+                   v-validate="{rules: {required: true, alpha_num: true, not_in: competitors}}"
+                   data-vv-validate-on="input">
             <a @click="addCompetitor" class="button is-info">
                 Add
             </a>
