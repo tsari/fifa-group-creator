@@ -31,7 +31,7 @@ class Scraper {
                     // we are done, resolve promise with those joined chunks
                     response.on('end', () => {
                         html = body.join('');
-                        cache.put(url, html, 1000 * 60); // cache for 1 minute
+                        cache.put(url, html, 60 * 1000 * 60); // cache for 1h
                         resolve(html);
                     });
                 });

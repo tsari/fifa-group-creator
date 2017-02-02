@@ -41,6 +41,7 @@ exports.getTeams = function (req, res) {
             let result = {};
             result['groups'] = drawer.draw(teams, req.body.competitors, req.body.groups);
             result['teamPoolSize'] = teams.length;
+            result['teamPool'] =  teams;
 
             return result;
         })

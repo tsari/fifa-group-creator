@@ -54,7 +54,7 @@
                             this.payload['drawnTeams'].push(response.data.team);
 
                             localStorage.setItem('payload', JSON.stringify(this.payload));
-                            this.$root.$emit('draw');
+                            this.$root.$emit('draw', response.data.team);
                         }
                     )
                     .catch(error => {

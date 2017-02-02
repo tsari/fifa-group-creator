@@ -21,27 +21,13 @@
         <div class="level-item has-text-centered">
             <div>
                 <p class="heading">Remaining Teams</p>
-                <p class="title">{{remainingTeams}}</p>
+                <p class="title">{{teamPoolRemaining}}</p>
             </div>
         </div>
     </nav>
 </template>
 <script>
     export default {
-        props: ['competitorCount', 'groupCount', 'teamPoolSize'],
-        data(){
-            return {
-                remainingTeams: 0
-            }
-        },
-        methods: {
-            recalc(){
-                this.remainingTeams = this.teamPoolSize - JSON.parse(localStorage.getItem('payload')).drawnTeams.length;
-            }
-        },
-        created(){
-            this.recalc();
-            this.$root.$on('draw', this.recalc);
-        }
+        props: ['competitorCount', 'groupCount', 'teamPoolSize', 'teamPoolRemaining']
     }
 </script>
